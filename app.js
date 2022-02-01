@@ -12,7 +12,7 @@ const authRouter = require('./routes/authRoutes');
 
 // Routes
 app.use('/api/v1', productRouter);
-app.use('api/v1', authRouter);
+app.use('/api/v1', authRouter);
 
 
 const start = async () => {
