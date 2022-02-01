@@ -3,12 +3,16 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const connectDB = require('./db/connect');
-const productRouter = require('./routes/productRoutes');
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
+// Router
+const productRouter = require('./routes/productRoutes');
+const authRouter = require('./routes/authRoutes');
+
 // Routes
-app.use('/api/v1/products', productRouter);
+app.use('/api/v1', productRouter);
+app.use('api/v1', authRouter);
 
 
 const start = async () => {

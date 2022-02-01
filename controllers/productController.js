@@ -17,7 +17,18 @@ const createProduct = async (req,res) => {
     }
 }
 
+const getProduct = async (req, res) => {
+    try{
+        const product = await Product.findOne({ _id: req.params.id});
+        res.status(200).json({ status: "Success", product });
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
 module.exports = {
     getAllProducts,
-    createProduct
+    createProduct,
+    getProduct
 }
