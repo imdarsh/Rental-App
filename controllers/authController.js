@@ -1,7 +1,8 @@
 const User = require('../models/User');
 const CustomError = require('../errors');
-const { StatusCode } = require('http-status-codes'); 
+const { StatusCodes } = require('http-status-codes'); 
 const { attachCookiesToResponse, createTokenUser } = require('../utils');
+const { use } = require('../routes/authRoutes');
 
 const register = async (req, res) => {
     const { name, email, contact, city, state, password } = req.body;
@@ -24,11 +25,36 @@ const register = async (req, res) => {
 
     const user = await User.create({ name, email, contact, city, state, password, role });
     const tokenUser = createTokenUser(user);
-    console.log(tokenUser);
-    attachCookiesToResponse({ res, user: tokenUser });
-    res.status(StatusCode.CREATED).json({ user: tokenUser });
+    // console.log(tokenUser);
+    // attachCookiesToResponse({ res, user: tokenUser });
+    res.status(StatusCodes.CREATED).json({ user: tokenUser });
+}
+
+const login = async (req,res) => {
+    const { email, password } = req.body;
+
+    if(!email || !password){
+        throw new CustomError.BadRequestError('Please provide email and password');
+    }
+
+    const user = await User.findOne({ email });
+
+    if(!user){
+        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+    }
+
+    const isPasswordCorrect = await user.comparePassword(password);
+
+    if(!isPasswordCorrect){
+        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+    }
+
+    const tokenUser = createTokenUser(user);
+    // attachCookiesToResponse({ res, user: tokenUser });
+    res.status(StatusCodes.OK).json({ user: tokenUser });
 }
 
 module.exports = {
-    register
+    register,
+    login
 }
