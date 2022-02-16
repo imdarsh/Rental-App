@@ -3,7 +3,14 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const connectDB = require('./db/connect');
+const cors = require('cors');
+
 app.use(express.json());
+app.use(cors({
+    origin: '*',
+    optionsSuccessStatus: 200,
+    credentials: true,
+}));
 const port = process.env.PORT || 3000;
 
 // Router
