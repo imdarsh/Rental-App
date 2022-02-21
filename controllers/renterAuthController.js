@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const CustomError = require('../errors');
 const { StatusCodes } = require('http-status-codes'); 
-const { attachCookiesToResponse, createTokenUser } = require('../utils');
+const { attachCookiesToResponse, createTokenUser, createJWT } = require('../utils');
 // const { use } = require('../routes/authRoutes');
 
 const register = async (req, res) => {
@@ -25,9 +25,10 @@ const register = async (req, res) => {
 
     const user = await User.create({ name, email, contact, city, state, password, role });
     const tokenUser = createTokenUser(user);
-    // console.log(tokenUser);
+    console.log(tokenUser);
+    const token = createJWT({ payload: tokenUser })
     // attachCookiesToResponse({ res, user: tokenUser });
-    res.status(StatusCodes.CREATED).json({ user: tokenUser });
+    res.status(StatusCodes.CREATED).json({ token: token, user: tokenUser });
 }
 
 const login = async (req,res) => {
