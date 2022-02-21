@@ -11,13 +11,15 @@ app.use(cors({
     optionsSuccessStatus: 200,
     credentials: true,
 }));
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Router
 const productRouter = require('./routes/productRoutes');
 const authRouter = require('./routes/authRoutes');
+const renterAuthRouter = require('./routes/renterAuthRoutes');
 
 // Routes
+app.use('/api/v1', renterAuthRouter);
 app.use('/api/v1', productRouter);
 app.use('/api/v1', authRouter);
 
