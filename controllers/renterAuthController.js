@@ -1,8 +1,5 @@
 const User = require('../models/User');
-const CustomError = require('../errors');
-const { StatusCodes } = require('http-status-codes'); 
 const { attachCookiesToResponse, createTokenUser, createJWT } = require('../utils');
-// const { use } = require('../routes/authRoutes');
 
 const register = async (req, res) => {
     const { name, email, contact, city, state, password } = req.body;
@@ -10,13 +7,15 @@ const register = async (req, res) => {
     // Checking if email already exists
     const emailAlreadyExists = await User.findOne({ email }); 
     if(emailAlreadyExists){
-        throw new CustomError.BadRequestError('Email already exists');
+        res.status(400);
+        throw new Error("Email already exists");
     }
 
     // Checking if contact already exists
     const contactAlreadyExists = await User.findOne({ contact });
     if(contactAlreadyExists){
-        throw new CustomError.BadRequestError('Contact already exists');
+        res.status(400);
+        throw new Error("Contact already exists");
     }
 
     // First User is admin by default
@@ -25,10 +24,8 @@ const register = async (req, res) => {
 
     const user = await User.create({ name, email, contact, city, state, password, role });
     const tokenUser = createTokenUser(user);
-    console.log(tokenUser);
     const token = createJWT({ payload: tokenUser })
-    // attachCookiesToResponse({ res, user: tokenUser });
-    res.status(StatusCodes.CREATED).json({ token: token, user: tokenUser });
+    res.status(200).json({ token: token, user: tokenUser });
 }
 
 const login = async (req,res) => {

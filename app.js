@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./db/connect');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
@@ -21,8 +22,7 @@ const productRouter = require('./routes/productRoutes');
 const authRouter = require('./routes/authRoutes');
 const renterAuthRouter = require('./routes/renterAuthRoutes');
 
-const notFoundMiddleware = require('./middleware/not-found');
-const errorHandlerMiddleware = require('./middleware/error-handler');
+
 
 // Routes
 app.use('/api/v1', renterAuthRouter);
@@ -31,8 +31,8 @@ app.use('/api/v1', authRouter);
 app.use('/api/v1', userRouter);
 
 
-app.use(notFoundMiddleware);
-app.use(errorHandlerMiddleware);
+app.use(notFound);
+app.use(errorHandler);
 
 const start = async () => {
     try{
