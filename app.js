@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./db/connect');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const { errorHandler } = require('./middleware/errorMiddleware');
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
@@ -31,7 +31,8 @@ app.use('/api/v1', authRouter);
 app.use('/api/v1', userRouter);
 
 
-app.use(notFound);
+// app.use(n`otFound);
+
 app.use(errorHandler);
 
 const start = async () => {

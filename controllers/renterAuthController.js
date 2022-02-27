@@ -7,15 +7,14 @@ const register = async (req, res) => {
     // Checking if email already exists
     const emailAlreadyExists = await User.findOne({ email }); 
     if(emailAlreadyExists){
-        res.status(400);
-        throw new Error("Email already exists");
+        return res.status(401).json({message: 'User with email already found'});
     }
 
     // Checking if contact already exists
     const contactAlreadyExists = await User.findOne({ contact });
     if(contactAlreadyExists){
-        res.status(400);
-        throw new Error("Contact already exists");
+        return res.status(401).json({message: 'User with email already found'});
+
     }
 
     // First User is admin by default
