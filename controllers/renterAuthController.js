@@ -31,24 +31,24 @@ const login = async (req,res) => {
     const { email, password } = req.body;
 
     if(!email || !password){
-        throw new CustomError.BadRequestError('Please provide email and password');
+        return res.status(401).json({message: 'Please provide email and password'});
     }
 
     const user = await User.findOne({ email });
 
     if(!user){
-        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+        return res.status(401).json({message: 'Invalid Credentials'});
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
 
     if(!isPasswordCorrect){
-        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+        return res.status(401).json({message: 'Invalid Credentials'});
     }
 
     const tokenUser = createTokenUser(user);
-    // attachCookiesToResponse({ res, user: tokenUser });
-    res.status(StatusCodes.OK).json({ user: tokenUser });
+    const token = createJWT({ payload: tokenUser })
+    res.status(200).json({ token: token, user: tokenUser });
 }
 
 const logout = async (req,res) => {
