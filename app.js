@@ -6,7 +6,9 @@ const connectDB = require('./db/connect');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { errorHandler } = require('./middleware/errorMiddleware');
+const fileUpload = require('express-fileupload');
 
+app.use(express.static(__dirname + 'uploads'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(cors({
@@ -14,6 +16,7 @@ app.use(cors({
     optionsSuccessStatus: 200,
     credentials: true,
 }));
+app.use(fileUpload());
 const port = process.env.PORT || 4000;
 
 // Router
@@ -21,6 +24,8 @@ const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
 const authRouter = require('./routes/authRoutes');
 const renterAuthRouter = require('./routes/renterAuthRoutes');
+
+
 
 
 

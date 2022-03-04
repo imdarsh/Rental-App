@@ -32,6 +32,11 @@ const ProductSchema = new mongoose.Schema(
         required: [true, 'Please provide product category'],
         enum: ['Furniture', 'Vehicles', 'Clothes','House','Electronics'],
       },
+      userId: {
+        type: String,
+        trim: true,
+        required: true
+      },
       
 }, { timestamps: true });
 
