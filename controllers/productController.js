@@ -8,8 +8,9 @@ const mongoose = require('mongoose');
 // Get all products
 const getAllProducts = async (req,res) => {
     const product = await Product.find({});
-    res.status(StatusCodes.OK).json({product});
+    res.status(200).json({product});
 }
+
 
 
 // Add product
@@ -28,24 +29,24 @@ const createProduct = async (req,res) => {
 const getProduct = async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id});
     if (!product) {
-        throw new CustomError.NotFoundError(`No product with id : ${productId}`);
+        throw new CustomError.NotFoundError(`No product with id : `);
     }
-    res.status(StatusCodes.OK).json({ status: "Success", product });
+    res.status(200).json({ status: "Success", product });
 }
 
 
 // Delete a product
 const deleteProduct = async (req, res) => {
     const { id: productId } = req.params;
-  
+    
     const product = await Product.findOne({ _id: productId });
   
     if (!product) {
-      throw new CustomError.NotFoundError(`No product with id : ${productId}`);
+      res.status(400).json({ message: 'Product Not Found' })
     }
   
     await product.remove();
-    res.status(StatusCodes.OK).json({ msg: 'Success! Product removed.' });
+    res.status(200).json({ message: 'Success! Product removed.' });
   };
 
   // Update a product
@@ -61,12 +62,25 @@ const deleteProduct = async (req, res) => {
       throw new CustomError.NotFoundError(`No product with id : ${productId}`);
     }
   
-    res.status(StatusCodes.OK).json({ product });
+    res.status(200).json({ product });
   }
+
+  // Get product by user ID
+  const getProductByUserId = async (req, res) => {
+    const { userId: userId } = req.params;
+    const products = await Product.find({ 'userId': userId });
+    if(!products) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.status(200).json({ products })
+  }
+
+
 module.exports = {
     getAllProducts,
     createProduct,
     getProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getProductByUserId
 }
