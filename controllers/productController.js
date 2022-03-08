@@ -3,6 +3,8 @@ const { StatusCodes } = require('http-status-codes');
 const { attachCookiesToResponse, createTokenUser } = require('../utils');
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const { sendFile } = require('express/lib/response');
 
 
 // Get all products
@@ -15,11 +17,24 @@ const getAllProducts = async (req,res) => {
 
 // Add product
 const createProduct = async (req,res) => {
+  
+  // Validation
   if (!req.files) {
     return res.status(400).json({message: 'No files were uploaded.'});
   }
+  if(isNaN(req.body.price)){
+    return res.status(400).json({message: 'Rent should be a Number'});
+  }
+  if(isNaN(req.body.deposit)){
+    return res.status(400).json({message: 'Deposit should be a Number'});
+  }
+  
+  // Image Uploading
   let img = req.files.image;
-  img.mv(`./uploads/${img.name}`);
+  imgfilename = new Date().getTime() +'_'+img.name;
+  img.mv(`./uploads/${imgfilename}`);
+  req.body.image = imgfilename;
+  
   const product = await Product.create(req.body);
   res.status(200).json({ status: "Success", product });   
 }
@@ -29,7 +44,7 @@ const createProduct = async (req,res) => {
 const getProduct = async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id});
     if (!product) {
-        throw new CustomError.NotFoundError(`No product with id : `);
+        return res.status(404).json({ message: "No Product Found" });
     }
     res.status(200).json({ status: "Success", product });
 }

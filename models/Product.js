@@ -9,12 +9,12 @@ const ProductSchema = new mongoose.Schema(
         maxlength: [100, 'Name can not be more than 100 characters'],
       },
       price: {
-        type: Number,
+        type: [Number, "Please provide number"],
         required: [true, 'Please provide product price'],
         default: 0,
       },
       deposit: {
-        type: Number,
+        type: [Number,"Please provide number"],
         required: [true, 'Please provide product price'],
         default: 0,
       },
@@ -29,8 +29,7 @@ const ProductSchema = new mongoose.Schema(
       },
       category: {
         type: String,
-        required: [true, 'Please provide product category'],
-        enum: ['Furniture', 'Vehicles', 'Clothes','House','Electronics'],
+        enum: ['Furniture', 'Vehicle', 'Clothes','House','Electronics'],
       },
       userId: {
         type: String,
