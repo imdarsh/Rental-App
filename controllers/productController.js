@@ -74,7 +74,7 @@ const deleteProduct = async (req, res) => {
     });
   
     if (!product) {
-      throw new CustomError.NotFoundError(`No product with id : ${productId}`);
+      res.status(400).json({ message: 'Product not found' })
     }
   
     res.status(200).json({ product });
