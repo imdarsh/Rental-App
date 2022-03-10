@@ -9,7 +9,7 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 const fileUpload = require('express-fileupload');
 const path = require('path');
 
-app.use(express.static(__dirname + 'uploads'));
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(cors({
