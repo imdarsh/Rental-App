@@ -10,13 +10,14 @@ const register = async (req, res) => {
     // Checking if email already exists
     const emailAlreadyExists = await User.findOne({ email }); 
     if(emailAlreadyExists){
-        throw new CustomError.BadRequestError('Email already exists');
+        return res.status(401).json({message: 'User with email already found'});
     }
 
     // Checking if contact already exists
     const contactAlreadyExists = await User.findOne({ contact });
     if(contactAlreadyExists){
-        throw new CustomError.BadRequestError('Contact already exists');
+        return res.status(401).json({message: 'User with contact already found'});
+
     }
 
     // First User is admin by default
@@ -25,34 +26,35 @@ const register = async (req, res) => {
 
     const user = await User.create({ name, email, contact, city, state, password, role });
     const tokenUser = createTokenUser(user);
-    console.log(tokenUser);
     const token = createJWT({ payload: tokenUser })
-    // attachCookiesToResponse({ res, user: tokenUser });
-    res.status(StatusCodes.CREATED).json({ token: token, user: tokenUser });
+    res.status(200).json({ token: token, user: tokenUser });
 }
-
 const login = async (req,res) => {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     if(!email || !password){
-        throw new CustomError.BadRequestError('Please provide email and password');
+        return res.status(401).json({message: 'Please provide email and password'});
     }
 
     const user = await User.findOne({ email });
 
     if(!user){
-        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+        return res.status(401).json({message: 'Invalid Credentials'});
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
 
     if(!isPasswordCorrect){
-        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+        return res.status(401).json({message: 'Invalid Credentials'});
+    }
+
+    if(role !== 'user'){
+        return res.status(401).json({ message: 'User does not exists' });
     }
 
     const tokenUser = createTokenUser(user);
-    // attachCookiesToResponse({ res, user: tokenUser });
-    res.status(StatusCodes.OK).json({ user: tokenUser });
+    const token = createJWT({ payload: tokenUser })
+    res.status(200).json({ token: token, user: tokenUser });
 }
 
 const logout = async (req,res) => {

@@ -13,7 +13,7 @@ const register = async (req, res) => {
     // Checking if contact already exists
     const contactAlreadyExists = await User.findOne({ contact });
     if(contactAlreadyExists){
-        return res.status(401).json({message: 'User with email already found'});
+        return res.status(401).json({message: 'User with contact already found'});
 
     }
 
