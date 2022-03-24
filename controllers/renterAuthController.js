@@ -27,9 +27,11 @@ const register = async (req, res) => {
     res.status(200).json({ token: token, user: tokenUser });
 }
 
+// renter login
 const login = async (req,res) => {
     const { email, password } = req.body;
 
+    // check email and password
     if(!email || !password){
         return res.status(401).json({message: 'Please provide email and password'});
     }
