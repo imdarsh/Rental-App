@@ -33,6 +33,7 @@ const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
 const authRouter = require('./routes/authRoutes');
 const renterAuthRouter = require('./routes/renterAuthRoutes');
+const orderRouter = require('./routes/orderRoutes');
 const res = require('express/lib/response');
 
 
@@ -40,6 +41,7 @@ const res = require('express/lib/response');
 
 
 // Routes
+app.use('/api/v1', orderRouter);
 app.use('/api/v1', renterAuthRouter);
 app.use('/api/v1', productRouter);
 app.use('/api/v1', authRouter);
