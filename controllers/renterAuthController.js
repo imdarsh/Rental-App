@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { attachCookiesToResponse, createTokenUser, createJWT } = require('../utils');
 
 const register = async (req, res) => {
-    const { name, email, contact, city, state, password } = req.body;
+    const { name, email, contact, address, city, state, password } = req.body;
 
     // Checking if email already exists
     const emailAlreadyExists = await User.findOne({ email }); 
@@ -21,7 +21,7 @@ const register = async (req, res) => {
     const isFirstAccount = (await User.countDocuments({})) === 0;
     const role = isFirstAccount ? 'admin' : 'renter';
 
-    const user = await User.create({ name, email, contact, city, state, password, role });
+    const user = await User.create({ name, email, contact, address, city, state, password, role });
     const tokenUser = createTokenUser(user);
     const token = createJWT({ payload: tokenUser })
     res.status(200).json({ token: token, user: tokenUser });

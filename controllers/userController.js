@@ -8,8 +8,11 @@ const {
 } = require('../utils');
 
 const showCurrentUser = async (req, res) => {
-    console.log(req.user);
-    res.status(StatusCodes.OK).json({ user: req.user });
+    const user = await User.findOne({ _id: req.params.id });
+    if(!user) {
+      res.status(404).json({ message: "No user found" });
+    }
+    res.status(200).json({ user });
   };
 
 
