@@ -1,5 +1,6 @@
 const Orders = require('../models/Orders');
 const mongoose = require('mongoose');
+const Product = require('../models/Product');
 
 const putOrders = async (req, res) => {
     const order = await Orders.create(req.body);
@@ -14,7 +15,19 @@ const getOrders = async (req, res) => {
     res.status(200).json({ order });
 }
 
+const myOrders = async (req, res) => {
+    const { userId: userId } = req.params;
+    const orders = await Orders.find({ 'userId': userId });
+    const productsID = await Orders.find({ 'userId': userId }).select('productId -_id').distinct('productId');
+    const products = await Product.find().where('_id').in(productsID).exec();
+    if(!orders) {
+        res.status(404).json({ message: 'Orders not found' });
+    }
+    res.status(200).json({ orders, products });
+}
+
 module.exports = {
     putOrders,
-    getOrders
+    getOrders,
+    myOrders
 }
