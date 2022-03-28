@@ -8,7 +8,9 @@ const OrderSchema = new mongoose.Schema({
         type: String,
     },
     total: {
-        type: [Number, "Please provide a number"]
+        type: [Number, "Please provide number"],
+        required: [true, 'Please provide total'],
+        default: 0,
     }
 }, { timestamps: true });
 
