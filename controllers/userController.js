@@ -15,7 +15,16 @@ const showCurrentUser = async (req, res) => {
     res.status(200).json({ user });
   };
 
+const updateProfile = async (req, res) => {
+  const { id: id } = req.params;
+  const user = await User.findOneAndUpdate({ _id: id }, req.body);
+  if(!user) {
+    req.state(400).json({ message: 'User not found' });
+  }
+  res.status(200).json({ user });
+}
 
 module.exports = {
-    showCurrentUser
+    showCurrentUser,
+    updateProfile
 }
