@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
+const bcrypt = require('bcryptjs');
 const {
   createTokenUser,
   attachCookiesToResponse,
@@ -26,7 +27,7 @@ const updateProfile = async (req, res) => {
 
 const changePassword = async (req, res) => {
   const { id: id } = req.params;
-  const { oldpassword, password } = req.body;
+  const { oldpassword, newpassword } = req.body;
   
   const userdata = await User.findOne({ _id: id });  
 
@@ -36,8 +37,9 @@ const changePassword = async (req, res) => {
         return res.status(401).json({message: 'Invalid Credentials'});
     }
 
-
-  const user = await User.findOneAndUpdate({ _id: id }, password);
+  const salt = await bcrypt.genSalt(10);
+  const passwd = await bcrypt.hash(newpassword, salt);  
+  const user = await User.findOneAndUpdate({ _id: id }, {password: passwd});
   if(!user) {
     res.status(404).json({ message: "User not found" });
   }
