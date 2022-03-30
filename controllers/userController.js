@@ -24,7 +24,29 @@ const updateProfile = async (req, res) => {
   res.status(200).json({ user });
 }
 
+const changePassword = async (req, res) => {
+  const { id: id } = req.params;
+  const { oldpassword, password } = req.body;
+  
+  const userdata = await User.findOne({ _id: id });  
+
+  const isPasswordCorrect = await userdata.comparePassword(oldpassword);
+
+    if(!isPasswordCorrect){
+        return res.status(401).json({message: 'Invalid Credentials'});
+    }
+
+
+  const user = await User.findOneAndUpdate({ _id: id }, password);
+  if(!user) {
+    res.status(404).json({ message: "User not found" });
+  }
+
+  res.status(200).json({ message: 'success' });
+}
+
 module.exports = {
     showCurrentUser,
-    updateProfile
+    updateProfile,
+    changePassword
 }
