@@ -91,11 +91,34 @@ const deleteProduct = async (req, res) => {
   }
 
 
+  // Get Product by Category
+  const getProductByCategory = async (req, res) => {
+    const { category: category } = req.params;
+    const products = await Product.find({ 'category': category });
+    if(!products) {
+      res.status(404).json({ message: 'Product not found' });
+    }
+    res.status(200).json({ products });
+  }
+
+  // Get Latest Products
+  const getLatestProducts = async (req, res) => {
+    const products = await Product.find({}).sort({ 'createdAt': -1 }).limit(4);
+    if(!products) {
+      res.status(404).json({ message: 'Product not found' });
+    }
+    res.status(200).json({ products });
+  }
+
+
+
 module.exports = {
     getAllProducts,
     createProduct,
     getProduct,
     deleteProduct,
     updateProduct,
-    getProductByUserId
+    getProductByUserId,
+    getProductByCategory,
+    getLatestProducts
 }

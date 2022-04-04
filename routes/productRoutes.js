@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllProducts, createProduct, getProduct, deleteProduct, updateProduct, getProductByUserId } = require('../controllers/productController');
+const { getAllProducts, createProduct, getProduct, deleteProduct, updateProduct, getProductByUserId, getProductByCategory, getLatestProducts } = require('../controllers/productController');
 // const { update } = require('../models/Product');
 const router = express.Router();
 
@@ -9,5 +9,8 @@ router.route('/products/:id').get(getProduct).delete(deleteProduct).patch(update
 
 router.route('/show-products/:userId').get(getProductByUserId);
 
+router.route('/category/:category').get(getProductByCategory);
+
+router.route('/latest-products').get(getLatestProducts);
 
 module.exports = router;
