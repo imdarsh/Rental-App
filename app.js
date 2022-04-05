@@ -34,6 +34,7 @@ const productRouter = require('./routes/productRoutes');
 const authRouter = require('./routes/authRoutes');
 const renterAuthRouter = require('./routes/renterAuthRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const paymentRouter = require('./routes/paymentRoutes');
 const res = require('express/lib/response');
 
 
@@ -46,6 +47,7 @@ app.use('/api/v1', renterAuthRouter);
 app.use('/api/v1', productRouter);
 app.use('/api/v1', authRouter);
 app.use('/api/v1', userRouter);
+// app.use('/api/v1', paymentRouter);
 
 
 // app.use(n`otFound);

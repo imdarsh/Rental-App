@@ -7,6 +7,12 @@ const OrderSchema = new mongoose.Schema({
     productId: {
         type: String,
     },
+    receipt: {
+        type: String,
+    },
+    currency: {
+        type: String,
+    },
     total: {
         type: [Number, "Please provide number"],
         required: [true, 'Please provide total'],
