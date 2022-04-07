@@ -43,6 +43,14 @@ const verifyPayment = async (req, res) => {
 
 }
 
+const saveOrders = async (req,res) => {
+    const order = await Orders.create(req.body);
+    if(!order){
+        return res.status(500).json({ message: 'Internal Error' });
+    }
+    res.status(200).json({ order });
+}
+
 const getOrders = async (req, res) => {
     const order = await Orders.find({ _id: req.params.id});
     if(!order) {
@@ -66,5 +74,6 @@ module.exports = {
     putOrders,
     getOrders,
     myOrders,
-    verifyPayment
+    verifyPayment,
+    saveOrders
 }
